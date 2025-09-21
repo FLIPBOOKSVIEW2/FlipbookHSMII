@@ -1,0 +1,1 @@
+self.onmessage=function(s){let e=[];const{pages:t,delAsyncList:n}=s.data;for(let s in t)t[s].items=t[s].items.filter((s=>!("pagination"===s.type&&n.includes(s.lot)||s.asyncLot&&n.includes(s.asyncLot))));e=t,self.postMessage(e),self.close()};

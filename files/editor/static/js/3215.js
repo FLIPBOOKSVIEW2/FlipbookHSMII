@@ -1,0 +1,1 @@
+self.onmessage=function(s){const{pages:e}=s.data,a=JSON.parse(JSON.stringify(e));self.postMessage(a),self.close()};
