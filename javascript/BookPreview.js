@@ -95,7 +95,6 @@ class BookPreviewInterface extends BookPreviewPublic {
     if (global.helpBody) global.helpBody.resetFormColor();
     if (global.printBody) global.printBody.resetFormColor();
     if (global.frmSearch) global.frmSearch.resetFormColor();
-    if (global.sharePanel) global.sharePanel.resetFormColor();
     if (global.frmTableOfContent) global.frmTableOfContent.resetFormColor();
     if (global.thumbnail) global.thumbnail.resetFormColor();
     if (global.videoGallery) global.videoGallery.resetFormColor();
@@ -256,82 +255,10 @@ class BookPreviewInterface extends BookPreviewPublic {
     toolBar.removeButton('home');
     toolBar.onResize();
   }
-  showShareButton() {
-    if (global.templeteName == 'brief') {
-      // this.toolBarAddNewButton(new PhoneShareButton());
-      this.showAlert();
-      return;
-    }
-    if (bookConfig.ShareButtonVisible || this.isHasButton('share', 'sharethis'))
-      return;
-    bookConfig.ShareButtonVisible = true;
-    if (toolBar.btnShare) {
-      toolBar.initShareButton();
-    } else this.toolBarAddNewButton(new ShareButton());
-    toolBar.sortXMLButton();
-    initComponents();
-    toolBar.onResize();
-    global.sharePanel.onResize();
-  }
-  hideShareButton() {
-    if (global.templeteName == 'brief') {
-      this.showAlert();
-      return;
-    }
-    if (!bookConfig.ShareButtonVisible) return;
-    bookConfig.ShareButtonVisible = false;
 
-    if (global.sharePanel) global.sharePanel.hide();
-    var share = toolBar.getButton('ShareButton', 'sharethis');
-    if (toolBar.btnShare) {
-      share = toolBar.btnShare;
-      if (toolBar.shareBevel) toolBar.shareBevel.$body.remove();
-    }
-    toolBar.removeButton(share);
-    toolBar.onResize();
-  }
 
-  setShareButtonParams(params) {
-    // addCurrentPage
-    if (global.templeteName == 'brief') {
-      this.showAlert();
-      return;
-    }
-    this.setBookConfig(params);
-    if (global.sharePanel && global.sharePanel.elements) {
-      global.sharePanel.elements.showOrHideCheck();
-    }
-  }
 
-  showEmailButton() {
-    if (global.templeteName == 'brief') {
-      // this.toolBarAddNewButton(new PhoneEmailButton());
-      this.showAlert();
-      return;
-    }
-    if (bookConfig.EmailButtonVisible || this.isHasButton('email')) return;
-    bookConfig.EmailButtonVisible = true;
-    this.toolBarAddNewButton(new ShareEmailButton());
-    toolBar.sortXMLButton();
-    toolBar.onResize();
-  }
 
-  hideEmailButton() {
-    if (global.templeteName == 'brief') {
-      this.showAlert();
-      return;
-    }
-    if (!bookConfig.EmailButtonVisible) return;
-    bookConfig.EmailButtonVisible = false;
-
-    toolBar.removeButton('email');
-    toolBar.onResize();
-  }
-
-  setEmailShareParams(params) {
-    // btnShareWithEmailSubject btnShareWithEmailBody
-    this.setBookConfig(params);
-  }
 
   showTelephoneNumberButton() {
     if (global.templeteName == 'brief') {
@@ -414,52 +341,8 @@ class BookPreviewInterface extends BookPreviewPublic {
     toolBar.onResize();
   }
 
-  showWeChatShareButton() {
-    if (global.templeteName == 'brief') {
-      // this.toolBarAddNewButton(new PhoneWeChatShareButton());
-      this.showAlert();
-      return;
-    }
-    if (bookConfig.WeChatShareButtonVisible || this.isHasButton('wechat'))
-      return;
-    bookConfig.WeChatShareButtonVisible = true;
 
-    this.toolBarAddNewButton(new WeChatShareButton());
 
-    toolBar.sortXMLButton();
-    toolBar.onResize();
-  }
-
-  hideWeChatShareButton() {
-    if (global.templeteName == 'brief') {
-      this.showAlert();
-      return;
-    }
-    if (!bookConfig.WeChatShareButtonVisible) return;
-    bookConfig.WeChatShareButtonVisible = false;
-
-    if (global.WeChatShareImg) global.WeChatShareImg.destroy();
-    toolBar.removeButton('wechat');
-    toolBar.onResize();
-  }
-
-  setWeChatShareParams(params) {
-    // WeChatShareButtonIcon
-    this.setBookConfig(params);
-    if (global.templeteName == 'brief') {
-      this.showAlert();
-      return;
-    }
-    var button = toolBar.getButton('wechat');
-    if (button) {
-      button.setCustomIcon(bookConfig.WeChatShareButtonIcon);
-      button.resetImg();
-      button.changeCaptionColor();
-      if (!bookConfig.WeChatShareButtonIcon) {
-        button.changeColor();
-      }
-    }
-  }
 
   showSoundButton() {
     if (global.templeteName == 'brief') {
@@ -1213,27 +1096,6 @@ class KeyBridge {
           return 'hideHomeButton';
         }
       }
-      case 'ShareButtonVisible': {
-        if (parseBool(this.params['ShareButtonVisible'], false)) {
-          return 'showShareButton';
-        } else {
-          return 'hideShareButton';
-        }
-      }
-      case 'addCurrentPage': {
-        return 'setShareButtonParams';
-      }
-      case 'EmailButtonVisible': {
-        if (parseBool(this.params['EmailButtonVisible'], false)) {
-          return 'showEmailButton';
-        } else {
-          return 'hideEmailButton';
-        }
-      }
-      case 'btnShareWithEmailSubject':
-      case 'btnShareWithEmailBody': {
-        return 'setEmailShareParams';
-      }
       case 'PhoneButtonVisible': {
         if (parseBool(this.params['PhoneButtonVisible'], false)) {
           return 'showTelephoneNumberButton';
@@ -1251,16 +1113,6 @@ class KeyBridge {
         } else {
           return 'hideMagnifierButton';
         }
-      }
-      case 'WeChatShareButtonVisible': {
-        if (parseBool(this.params['WeChatShareButtonVisible'], false)) {
-          return 'showWeChatShareButton';
-        } else {
-          return 'hideWeChatShareButton';
-        }
-      }
-      case 'WeChatShareButtonIcon': {
-        return 'setWeChatShareParams';
       }
       case 'BackgroundSoundButtonVisible': {
         if (parseBool(this.params['BackgroundSoundButtonVisible'], false)) {
